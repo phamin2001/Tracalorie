@@ -33,10 +33,12 @@ const ItemCtrl = (function () {
 
 // UI Controller
 const UICtrl = (function () {
-  const UISelector = {
-    itemList: '#item-list'
-  }
-
+  const UISelectors = {
+    itemList: '#item-list',
+    addBtn: '.add-btn',
+    itemNameInput: '#item-name',
+    itemCaloriesInput: '#item-calories'
+  };
 
   // Public methods
   return {
@@ -53,13 +55,43 @@ const UICtrl = (function () {
       });
 
       // Insert list items
-      document.querySelector(UISelector.itemList).innerHTML = html;
+      document.querySelector(UISelectors.itemList).innerHTML = html;
+    },
+    getItemInput: function () {
+      return {
+        name: document.querySelector(UISelectors.itemNameInput).value,
+        calories: document.querySelector(UISelectors.itemCaloriesInput).value
+      };
+    },
+    getSelectors: function () {
+      return UISelectors;
     }
   };
 })();
 
 // App Controller
 const App = (function (ItemCtrl, UICtrl) {
+  // Load event listeners
+  const loadEventListeners = function () {
+    // Get UI Selectors
+    const UISelectors = UICtrl.getSelectors();
+
+    // Add item event
+    document
+      .querySelector(UISelectors.addBtn)
+      .addEventListener('click', itemAddSubmit);
+  };
+
+  // Add item submit
+  const itemAddSubmit = function (e) {
+    // Get from input form UI Controller
+    const input = UICtrl.getItemInput();
+
+    console.log(input);
+
+    e.preventDefault();
+  };
+
   // Public methods
   return {
     init: function () {
@@ -68,6 +100,9 @@ const App = (function (ItemCtrl, UICtrl) {
 
       // Populate list with items
       UICtrl.populateItemList(items);
+
+      // Load event listeneres
+      loadEventListeners();
     }
   };
 })(ItemCtrl, UICtrl);
